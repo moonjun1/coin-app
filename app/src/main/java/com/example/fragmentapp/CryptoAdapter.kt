@@ -30,7 +30,13 @@ class CryptoAdapter(
         val crypto = cryptoList[position]
 
         holder.symbolText.text = crypto.symbol.uppercase()
-        holder.nameText.text = crypto.name
+
+        val koreanName = CoinNameMapper.getKoreanName(crypto.id)
+        holder.nameText.text = if (koreanName != null) {
+            "$koreanName (${crypto.name})"
+        } else {
+            crypto.name
+        }
 
         val priceFormat = DecimalFormat("#,###")
         holder.priceText.text = "₩${priceFormat.format(crypto.current_price)}"
