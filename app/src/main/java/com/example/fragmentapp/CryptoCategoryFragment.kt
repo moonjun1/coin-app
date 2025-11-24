@@ -95,7 +95,7 @@ class CryptoCategoryFragment : Fragment() {
 
     private fun openDetailFragment(cryptoId: String) {
         val detailFragment = CryptoDetailFragment.newInstance(cryptoId)
-        parentFragmentManager.beginTransaction()
+        requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, detailFragment)
             .addToBackStack(null)
             .commit()
