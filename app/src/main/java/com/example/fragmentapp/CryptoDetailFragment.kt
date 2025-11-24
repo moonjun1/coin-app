@@ -1,5 +1,6 @@
 package com.example.fragmentapp
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +10,16 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class CryptoDetailFragment : Fragment() {
 
@@ -46,6 +55,7 @@ class CryptoDetailFragment : Fragment() {
 
         cryptoId?.let {
             loadCryptoDetail(it, view)
+            loadPriceChart(it, view)
         }
     }
 
@@ -126,6 +136,61 @@ class CryptoDetailFragment : Fragment() {
             android.graphics.Color.parseColor("#FF1744")
         } else {
             android.graphics.Color.parseColor("#2196F3")
+        }
+    }
+
+    private fun loadPriceChart(id: String, view: View) {
+        lifecycleScope.launch {
+            try {
+                val chartData = RetrofitClient.api.getMarketChart(id, "krw", 7)
+                val lineChart = view.findViewById<LineChart>(R.id.price_chart)
+
+                val entries = chartData.prices.mapIndexed { index, priceData ->
+                    Entry(index.toFloat(), priceData[1].toFloat())
+                }
+
+                val dataSet = LineDataSet(entries, "가격 (KRW)").apply {
+                    color = Color.parseColor("#FF5722")
+                    valueTextColor = Color.BLACK
+                    lineWidth = 2f
+                    setDrawCircles(false)
+                    setDrawValues(false)
+                    setDrawFilled(true)
+                    fillColor = Color.parseColor("#FFCCBC")
+                    mode = LineDataSet.Mode.CUBIC_BEZIER
+                }
+
+                lineChart.apply {
+                    data = LineData(dataSet)
+                    description.isEnabled = false
+                    legend.isEnabled = false
+                    setTouchEnabled(true)
+                    setPinchZoom(true)
+
+                    xAxis.apply {
+                        position = XAxis.XAxisPosition.BOTTOM
+                        setDrawGridLines(false)
+                        setDrawLabels(false)
+                    }
+
+                    axisLeft.apply {
+                        setDrawGridLines(true)
+                        gridColor = Color.LTGRAY
+                    }
+
+                    axisRight.isEnabled = false
+
+                    animateX(1000)
+                    invalidate()
+                }
+
+            } catch (e: Exception) {
+                Toast.makeText(
+                    context,
+                    "차트 데이터를 불러오는데 실패했습니다: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 }

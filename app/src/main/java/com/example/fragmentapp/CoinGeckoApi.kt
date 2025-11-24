@@ -23,4 +23,11 @@ interface CoinGeckoApi {
         @Query("community_data") communityData: Boolean = false,
         @Query("developer_data") developerData: Boolean = false
     ): CryptoDetail
+
+    @GET("coins/{id}/market_chart")
+    suspend fun getMarketChart(
+        @Path("id") id: String,
+        @Query("vs_currency") currency: String = "krw",
+        @Query("days") days: Int = 7
+    ): MarketChart
 }
