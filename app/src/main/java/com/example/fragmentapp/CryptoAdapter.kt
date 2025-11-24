@@ -13,9 +13,6 @@ class CryptoAdapter(
     private val onItemClick: (String) -> Unit
 ) : RecyclerView.Adapter<CryptoAdapter.CryptoViewHolder>() {
 
-    /**
-     * ViewHolder: 각 아이템의 뷰를 보관
-     */
     class CryptoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val symbolText: TextView = view.findViewById(R.id.crypto_symbol)
         val nameText: TextView = view.findViewById(R.id.crypto_name)

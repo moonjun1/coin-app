@@ -11,10 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 
-/**
- * 대시보드 Fragment
- * 주요 암호화폐 TOP 5 요약 정보 표시
- */
 class DashboardFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
