@@ -51,6 +51,10 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(FavoriteFragment())
                     toolbar.title = "즐겨찾기"
                 }
+                R.id.nav_news -> {
+                    replaceFragment(NewsFragment())
+                    toolbar.title = "뉴스"
+                }
                 R.id.nav_settings -> {
                     replaceFragment(SettingsFragment())
                     toolbar.title = "설정"

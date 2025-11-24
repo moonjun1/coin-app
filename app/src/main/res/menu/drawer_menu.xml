@@ -19,6 +19,11 @@
             android:title="즐겨찾기" />
 
         <item
+            android:id="@+id/nav_news"
+            android:icon="@android:drawable/ic_menu_report_image"
+            android:title="뉴스" />
+
+        <item
             android:id="@+id/nav_settings"
             android:icon="@android:drawable/ic_menu_preferences"
             android:title="설정" />
