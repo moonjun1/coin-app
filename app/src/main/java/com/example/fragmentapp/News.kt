@@ -3,25 +3,25 @@ package com.example.fragmentapp
 import com.google.gson.annotations.SerializedName
 
 data class NewsResponse(
-    @SerializedName("Data")
-    val data: List<News>
+    val status: String,
+    val totalResults: Int,
+    val articles: List<News>
 )
 
 data class News(
-    val id: String,
+    val source: NewsSource,
+    val author: String?,
     val title: String,
-    val body: String,
+    val description: String?,
     val url: String,
-    @SerializedName("source_info")
-    val sourceInfo: SourceInfo,
-    @SerializedName("imageurl")
+    @SerializedName("urlToImage")
     val imageUrl: String?,
-    @SerializedName("published_on")
-    val publishedOn: Long,
-    val categories: String?
+    @SerializedName("publishedAt")
+    val publishedAt: String,
+    val content: String?
 )
 
-data class SourceInfo(
-    val name: String,
-    val img: String?
+data class NewsSource(
+    val id: String?,
+    val name: String
 )

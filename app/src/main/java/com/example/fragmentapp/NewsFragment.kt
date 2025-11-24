@@ -40,7 +40,7 @@ class NewsFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 val newsResponse = RetrofitClient.newsApi.getNews()
-                val newsList = newsResponse.data
+                val newsList = newsResponse.articles
 
                 if (newsList.isEmpty()) {
                     emptyView.text = "뉴스가 없습니다"

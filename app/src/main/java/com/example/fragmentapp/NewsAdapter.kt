@@ -32,8 +32,8 @@ class NewsAdapter(
         val news = newsList[position]
 
         holder.titleText.text = news.title
-        holder.sourceText.text = news.sourceInfo.name
-        holder.dateText.text = formatDate(news.publishedOn)
+        holder.sourceText.text = news.source.name
+        holder.dateText.text = formatDate(news.publishedAt)
 
         holder.itemView.setOnClickListener {
             onItemClick(news.url)
@@ -42,9 +42,14 @@ class NewsAdapter(
 
     override fun getItemCount() = newsList.size
 
-    private fun formatDate(timestamp: Long): String {
-        val date = Date(timestamp * 1000)
-        val format = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.KOREA)
-        return format.format(date)
+    private fun formatDate(dateString: String): String {
+        return try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
+            val date = inputFormat.parse(dateString)
+            val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.KOREA)
+            outputFormat.format(date ?: Date())
+        } catch (e: Exception) {
+            dateString
+        }
     }
 }

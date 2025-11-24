@@ -4,9 +4,11 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface NewsApi {
-    @GET("data/v2/news/")
+    @GET("v2/everything")
     suspend fun getNews(
-        @Query("lang") language: String = "EN",
-        @Query("sortOrder") sortOrder: String = "latest"
+        @Query("q") query: String = "cryptocurrency OR bitcoin OR ethereum",
+        @Query("language") language: String = "ko",
+        @Query("sortBy") sortBy: String = "publishedAt",
+        @Query("pageSize") pageSize: Int = 50
     ): NewsResponse
 }
