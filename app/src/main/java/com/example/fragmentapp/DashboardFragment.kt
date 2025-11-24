@@ -42,7 +42,9 @@ class DashboardFragment : Fragment() {
                 val allCryptos = RetrofitClient.api.getCryptoList()
                 val topFive = allCryptos.take(5)
 
-                recyclerView.adapter = CryptoAdapter(topFive)
+                recyclerView.adapter = CryptoAdapter(topFive) { cryptoId ->
+                    openDetailFragment(cryptoId)
+                }
 
             } catch (e: Exception) {
                 Toast.makeText(
@@ -52,5 +54,13 @@ class DashboardFragment : Fragment() {
                 ).show()
             }
         }
+    }
+
+    private fun openDetailFragment(cryptoId: String) {
+        val detailFragment = CryptoDetailFragment.newInstance(cryptoId)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, detailFragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

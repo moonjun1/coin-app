@@ -69,24 +69,21 @@ class CryptoCategoryFragment : Fragment() {
      * API에서 암호화폐 데이터를 가져와 RecyclerView에 표시
      */
     private fun loadCryptoData() {
-        // lifecycleScope: Fragment 생명주기에 맞춰 자동으로 취소되는 코루틴 스코프
         lifecycleScope.launch {
             try {
-                // API 호출 (메인 스레드가 아닌 IO 스레드에서 실행됨)
                 val allCryptos = RetrofitClient.api.getCryptoList()
 
-                // 카테고리별 필터링
                 val filteredList = when (category) {
-                    "major" -> allCryptos.take(10)        // 메이저코인: TOP 10
-                    "alt" -> allCryptos.drop(10).take(90) // 알트코인: 11위~100위
+                    "major" -> allCryptos.take(10)
+                    "alt" -> allCryptos.drop(10).take(90)
                     else -> allCryptos
                 }
 
-                // RecyclerView에 데이터 설정
-                recyclerView.adapter = CryptoAdapter(filteredList)
+                recyclerView.adapter = CryptoAdapter(filteredList) { cryptoId ->
+                    openDetailFragment(cryptoId)
+                }
 
             } catch (e: Exception) {
-                // 에러 처리
                 Toast.makeText(
                     context,
                     "데이터를 불러오는데 실패했습니다: ${e.message}",
@@ -94,5 +91,13 @@ class CryptoCategoryFragment : Fragment() {
                 ).show()
             }
         }
+    }
+
+    private fun openDetailFragment(cryptoId: String) {
+        val detailFragment = CryptoDetailFragment.newInstance(cryptoId)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, detailFragment)
+            .addToBackStack(null)
+            .commit()
     }
 }
