@@ -15,6 +15,7 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -53,10 +54,35 @@ class CryptoDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        cryptoId?.let {
-            loadCryptoDetail(it, view)
-            loadPriceChart(it, view)
+        cryptoId?.let { id ->
+            loadCryptoDetail(id, view)
+            loadPriceChart(id, view)
+            setupFavoriteButton(id, view)
         }
+    }
+
+    private fun setupFavoriteButton(id: String, view: View) {
+        val fabFavorite = view.findViewById<FloatingActionButton>(R.id.fab_favorite)
+
+        updateFavoriteIcon(fabFavorite, id)
+
+        fabFavorite.setOnClickListener {
+            val isFavorite = FavoriteManager.toggleFavorite(requireContext(), id)
+            updateFavoriteIcon(fabFavorite, id)
+
+            val message = if (isFavorite) "즐겨찾기에 추가되었습니다" else "즐겨찾기에서 제거되었습니다"
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updateFavoriteIcon(fab: FloatingActionButton, id: String) {
+        val isFavorite = FavoriteManager.isFavorite(requireContext(), id)
+        val icon = if (isFavorite) {
+            android.R.drawable.star_big_on
+        } else {
+            android.R.drawable.star_big_off
+        }
+        fab.setImageResource(icon)
     }
 
     private fun loadCryptoDetail(id: String, view: View) {
