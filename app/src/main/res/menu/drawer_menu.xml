@@ -4,19 +4,19 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/nav_home"
+            android:id="@+id/nav_dashboard"
             android:icon="@android:drawable/ic_menu_view"
-            android:title="홈" />
+            android:title="대시보드" />
 
         <item
-            android:id="@+id/nav_news"
+            android:id="@+id/nav_crypto"
             android:icon="@android:drawable/ic_menu_info_details"
-            android:title="뉴스" />
+            android:title="암호화폐 시세" />
 
         <item
-            android:id="@+id/nav_profile"
+            android:id="@+id/nav_favorite"
             android:icon="@android:drawable/ic_menu_myplaces"
-            android:title="프로필" />
+            android:title="즐겨찾기" />
 
         <item
             android:id="@+id/nav_settings"

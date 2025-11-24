@@ -14,12 +14,8 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.navigation.NavigationView
 
 /**
- * Fragment, Navigation Drawer, TabLayout을 활용한 예제
- *
- * 주요 학습 내용:
- * 1. DrawerLayout을 통한 네비게이션 드로워 구현
- * 2. Fragment 전환 (Transaction)
- * 3. TabLayout을 포함한 Fragment 사용
+ * 암호화폐 시세 앱
+ * Fragment, Navigation Drawer, TabLayout 활용
  */
 class MainActivity : AppCompatActivity() {
 
@@ -57,17 +53,17 @@ class MainActivity : AppCompatActivity() {
         // 네비게이션 메뉴 아이템 클릭 리스너
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.nav_home -> {
-                    replaceFragment(HomeFragment())
-                    toolbar.title = "홈"
+                R.id.nav_dashboard -> {
+                    replaceFragment(DashboardFragment())
+                    toolbar.title = "대시보드"
                 }
-                R.id.nav_news -> {
-                    replaceFragment(NewsFragment())
-                    toolbar.title = "뉴스"
+                R.id.nav_crypto -> {
+                    replaceFragment(CryptoListFragment())
+                    toolbar.title = "암호화폐 시세"
                 }
-                R.id.nav_profile -> {
-                    replaceFragment(ProfileFragment())
-                    toolbar.title = "프로필"
+                R.id.nav_favorite -> {
+                    replaceFragment(FavoriteFragment())
+                    toolbar.title = "즐겨찾기"
                 }
                 R.id.nav_settings -> {
                     replaceFragment(SettingsFragment())
@@ -81,8 +77,8 @@ class MainActivity : AppCompatActivity() {
 
         // 초기 Fragment 설정
         if (savedInstanceState == null) {
-            replaceFragment(HomeFragment())
-            navigationView.setCheckedItem(R.id.nav_home)
+            replaceFragment(DashboardFragment())
+            navigationView.setCheckedItem(R.id.nav_dashboard)
         }
     }
 

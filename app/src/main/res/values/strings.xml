@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Fragment App</string>
+    <string name="app_name">암호화폐 시세</string>
     <string name="navigation_drawer_open">네비게이션 드로워 열기</string>
     <string name="navigation_drawer_close">네비게이션 드로워 닫기</string>
 </resources>
