@@ -46,17 +46,25 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun loadFavorites() {
+        val favoriteIds = FavoriteManager.getFavorites(requireContext())
+
+        if (favoriteIds.isEmpty()) {
+            recyclerView.visibility = View.GONE
+            emptyView.visibility = View.VISIBLE
+            emptyView.text = "즐겨찾기한 코인이 없습니다"
+            return
+        }
+
         lifecycleScope.launch {
             try {
-                val favoriteIds = FavoriteManager.getFavorites(requireContext())
+                val allCryptos = RetrofitClient.api.getCryptoList()
+                val favoriteCryptos = allCryptos.filter { it.id in favoriteIds }
 
-                if (favoriteIds.isEmpty()) {
+                if (favoriteCryptos.isEmpty()) {
                     recyclerView.visibility = View.GONE
                     emptyView.visibility = View.VISIBLE
+                    emptyView.text = "즐겨찾기한 코인을 찾을 수 없습니다"
                 } else {
-                    val allCryptos = RetrofitClient.api.getCryptoList()
-                    val favoriteCryptos = allCryptos.filter { it.id in favoriteIds }
-
                     recyclerView.visibility = View.VISIBLE
                     emptyView.visibility = View.GONE
 
@@ -66,10 +74,14 @@ class FavoriteFragment : Fragment() {
                 }
 
             } catch (e: Exception) {
+                e.printStackTrace()
+                recyclerView.visibility = View.GONE
+                emptyView.visibility = View.VISIBLE
+                emptyView.text = "네트워크 오류\n${e.message}"
                 Toast.makeText(
                     context,
-                    "데이터를 불러오는데 실패했습니다: ${e.message}",
-                    Toast.LENGTH_SHORT
+                    "인터넷 연결을 확인해주세요",
+                    Toast.LENGTH_LONG
                 ).show()
             }
         }

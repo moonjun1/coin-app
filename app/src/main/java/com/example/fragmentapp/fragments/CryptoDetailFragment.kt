@@ -226,40 +226,37 @@ class CryptoDetailFragment : Fragment() {
 
     private fun setupMemoButton(id: String, view: View) {
         val btnAddMemo = view.findViewById<Button>(R.id.btn_add_memo)
+        val btnDeleteMemo = view.findViewById<Button>(R.id.btn_delete_memo)
         val memoText = view.findViewById<TextView>(R.id.memo_text)
 
-        loadMemo(id, memoText, btnAddMemo)
+        loadMemo(id, memoText, btnAddMemo, btnDeleteMemo)
 
         btnAddMemo.setOnClickListener {
-            showMemoDialog(id, memoText, btnAddMemo)
+            showMemoDialog(id, memoText, btnAddMemo, btnDeleteMemo)
         }
 
-        memoText.setOnLongClickListener {
-            if (FavoriteManager.hasMemo(requireContext(), id)) {
-                showDeleteMemoDialog(id, memoText, btnAddMemo)
-                true
-            } else {
-                false
-            }
+        btnDeleteMemo.setOnClickListener {
+            showDeleteMemoDialog(id, memoText, btnAddMemo, btnDeleteMemo)
         }
     }
 
-    private fun loadMemo(id: String, memoText: TextView, btnAddMemo: Button) {
+    private fun loadMemo(id: String, memoText: TextView, btnAddMemo: Button, btnDeleteMemo: Button) {
         val memo = FavoriteManager.getMemo(requireContext(), id)
         if (memo.isNotEmpty()) {
             memoText.text = memo
-            btnAddMemo.text = "메모 수정"
+            btnAddMemo.text = "수정"
+            btnDeleteMemo.visibility = View.VISIBLE
         } else {
             memoText.text = "메모를 추가하려면 위 버튼을 눌러주세요."
-            btnAddMemo.text = "메모 추가"
+            btnAddMemo.text = "추가"
+            btnDeleteMemo.visibility = View.GONE
         }
     }
 
-    private fun showMemoDialog(id: String, memoText: TextView, btnAddMemo: Button) {
+    private fun showMemoDialog(id: String, memoText: TextView, btnAddMemo: Button, btnDeleteMemo: Button) {
         val currentMemo = FavoriteManager.getMemo(requireContext(), id)
         val isEdit = currentMemo.isNotEmpty()
 
-        // EditText 생성
         val input = EditText(requireContext()).apply {
             setText(currentMemo)
             hint = "이 코인에 대한 메모를 입력하세요"
@@ -275,7 +272,7 @@ class CryptoDetailFragment : Fragment() {
                 val newMemo = input.text.toString().trim()
                 if (newMemo.isNotEmpty()) {
                     FavoriteManager.saveMemo(requireContext(), id, newMemo)
-                    loadMemo(id, memoText, btnAddMemo)
+                    loadMemo(id, memoText, btnAddMemo, btnDeleteMemo)
                     Toast.makeText(
                         context,
                         if (isEdit) "메모가 수정되었습니다" else "메모가 추가되었습니다",
@@ -292,13 +289,13 @@ class CryptoDetailFragment : Fragment() {
             .show()
     }
 
-    private fun showDeleteMemoDialog(id: String, memoText: TextView, btnAddMemo: Button) {
+    private fun showDeleteMemoDialog(id: String, memoText: TextView, btnAddMemo: Button, btnDeleteMemo: Button) {
         AlertDialog.Builder(requireContext())
             .setTitle("메모 삭제")
             .setMessage("이 메모를 삭제하시겠습니까?")
             .setPositiveButton("삭제") { dialog, _ ->
                 FavoriteManager.deleteMemo(requireContext(), id)
-                loadMemo(id, memoText, btnAddMemo)
+                loadMemo(id, memoText, btnAddMemo, btnDeleteMemo)
                 Toast.makeText(context, "메모가 삭제되었습니다", Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
             }
