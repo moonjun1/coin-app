@@ -1,4 +1,4 @@
-package com.example.fragmentapp
+package com.example.fragmentapp.models
 
 /**
  * 암호화폐 데이터 클래스

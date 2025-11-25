@@ -1,4 +1,4 @@
-package com.example.fragmentapp
+package com.example.fragmentapp.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.example.fragmentapp.R
+import com.example.fragmentapp.models.News
 
 class NewsAdapter(
     private val newsList: List<News>,

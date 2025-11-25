@@ -1,5 +1,6 @@
-package com.example.fragmentapp
+package com.example.fragmentapp.fragments
 
+import com.example.fragmentapp.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

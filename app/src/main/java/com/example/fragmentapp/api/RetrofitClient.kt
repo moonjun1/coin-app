@@ -1,4 +1,4 @@
-package com.example.fragmentapp
+package com.example.fragmentapp.api
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

@@ -9,6 +9,11 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.navigation.NavigationView
+import com.example.fragmentapp.fragments.DashboardFragment
+import com.example.fragmentapp.fragments.CryptoListFragment
+import com.example.fragmentapp.fragments.FavoriteFragment
+import com.example.fragmentapp.fragments.NewsFragment
+import com.example.fragmentapp.fragments.SettingsFragment
 
 class MainActivity : AppCompatActivity() {
 

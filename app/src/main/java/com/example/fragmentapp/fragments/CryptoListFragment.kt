@@ -1,4 +1,4 @@
-package com.example.fragmentapp
+package com.example.fragmentapp.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.example.fragmentapp.R
 
 class CryptoListFragment : Fragment() {
 
@@ -40,6 +41,7 @@ class CryptoListFragment : Fragment() {
             tab.text = when (position) {
                 0 -> "메이저코인"
                 1 -> "알트코인"
+                2 -> "NFT"
                 else -> "기타"
             }
         }.attach()
@@ -52,9 +54,10 @@ class CryptoViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment
         return when (position) {
             0 -> CryptoCategoryFragment.newInstance("major")
             1 -> CryptoCategoryFragment.newInstance("alt")
+            2 -> CryptoCategoryFragment.newInstance("nft")
             else -> CryptoCategoryFragment.newInstance("major")
         }
     }
 
-    override fun getItemCount() = 2
+    override fun getItemCount() = 3
 }

@@ -1,45 +1,68 @@
-package com.example.fragmentapp
+package com.example.fragmentapp.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
+import com.example.fragmentapp.R
+import com.example.fragmentapp.adapters.CryptoAdapter
+import com.example.fragmentapp.api.RetrofitClient
+import com.example.fragmentapp.utils.FavoriteManager
 
-class DashboardFragment : Fragment() {
+class FavoriteFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var emptyView: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_dashboard, container, false)
+        return inflater.inflate(R.layout.fragment_favorite, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView = view.findViewById(R.id.recycler_view)
+        emptyView = view.findViewById(R.id.empty_view)
+
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        loadTopCryptos()
+        loadFavorites()
     }
 
-    private fun loadTopCryptos() {
+    override fun onResume() {
+        super.onResume()
+        loadFavorites()
+    }
+
+    private fun loadFavorites() {
         lifecycleScope.launch {
             try {
-                val allCryptos = RetrofitClient.api.getCryptoList()
-                val topFive = allCryptos.take(5)
+                val favoriteIds = FavoriteManager.getFavorites(requireContext())
 
-                recyclerView.adapter = CryptoAdapter(topFive) { cryptoId ->
-                    openDetailFragment(cryptoId)
+                if (favoriteIds.isEmpty()) {
+                    recyclerView.visibility = View.GONE
+                    emptyView.visibility = View.VISIBLE
+                } else {
+                    val allCryptos = RetrofitClient.api.getCryptoList()
+                    val favoriteCryptos = allCryptos.filter { it.id in favoriteIds }
+
+                    recyclerView.visibility = View.VISIBLE
+                    emptyView.visibility = View.GONE
+
+                    recyclerView.adapter = CryptoAdapter(favoriteCryptos) { cryptoId ->
+                        openDetailFragment(cryptoId)
+                    }
                 }
 
             } catch (e: Exception) {

@@ -1,7 +1,8 @@
-package com.example.fragmentapp
+package com.example.fragmentapp.api
 
 import retrofit2.http.GET
 import retrofit2.http.Query
+import com.example.fragmentapp.models.NewsResponse
 
 interface NewsApi {
     @GET("v2/everything")

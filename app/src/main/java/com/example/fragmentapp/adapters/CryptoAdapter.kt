@@ -1,4 +1,4 @@
-package com.example.fragmentapp
+package com.example.fragmentapp.adapters
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.text.DecimalFormat
+import com.example.fragmentapp.R
+import com.example.fragmentapp.models.Crypto
+import com.example.fragmentapp.utils.CoinNameMapper
 
 class CryptoAdapter(
     private val cryptoList: List<Crypto>,

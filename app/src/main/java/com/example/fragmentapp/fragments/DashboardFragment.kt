@@ -1,69 +1,62 @@
-package com.example.fragmentapp
+package com.example.fragmentapp.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
+import com.example.fragmentapp.R
+import com.example.fragmentapp.adapters.CryptoAdapter
+import com.example.fragmentapp.api.RetrofitClient
 
-class NewsFragment : Fragment() {
+class DashboardFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var emptyView: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_news, container, false)
+        return inflater.inflate(R.layout.fragment_dashboard, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView = view.findViewById(R.id.news_recycler_view)
-        emptyView = view.findViewById(R.id.empty_view)
+        recyclerView = view.findViewById(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        loadNews()
+        loadTopCryptos()
     }
 
-    private fun loadNews() {
-        emptyView.visibility = View.VISIBLE
+    private fun loadTopCryptos() {
         lifecycleScope.launch {
             try {
-                val newsResponse = RetrofitClient.newsApi.getNews()
-                val newsList = newsResponse.articles
+                val allCryptos = RetrofitClient.api.getCryptoList()
+                val topFive = allCryptos.take(5)
 
-                if (newsList.isEmpty()) {
-                    emptyView.text = "뉴스가 없습니다"
-                } else {
-                    emptyView.visibility = View.GONE
-                    recyclerView.adapter = NewsAdapter(newsList) { newsUrl ->
-                        openNewsDetail(newsUrl)
-                    }
+                recyclerView.adapter = CryptoAdapter(topFive) { cryptoId ->
+                    openDetailFragment(cryptoId)
                 }
 
             } catch (e: Exception) {
-                emptyView.text = "뉴스를 불러오는데 실패했습니다"
                 Toast.makeText(
                     context,
-                    "뉴스를 불러오는데 실패했습니다: ${e.message}",
+                    "데이터를 불러오는데 실패했습니다: ${e.message}",
                     Toast.LENGTH_SHORT
                 ).show()
             }
         }
     }
 
-    private fun openNewsDetail(newsUrl: String) {
-        val detailFragment = NewsDetailFragment.newInstance(newsUrl)
+    private fun openDetailFragment(cryptoId: String) {
+        val detailFragment = CryptoDetailFragment.newInstance(cryptoId)
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, detailFragment)
             .addToBackStack(null)

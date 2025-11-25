@@ -1,4 +1,4 @@
-package com.example.fragmentapp
+package com.example.fragmentapp.utils
 
 object CoinNameMapper {
     private val koreanNames = mapOf(

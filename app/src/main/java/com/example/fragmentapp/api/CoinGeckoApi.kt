@@ -1,8 +1,11 @@
-package com.example.fragmentapp
+package com.example.fragmentapp.api
 
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import com.example.fragmentapp.models.Crypto
+import com.example.fragmentapp.models.CryptoDetail
+import com.example.fragmentapp.models.MarketChart
 
 interface CoinGeckoApi {
 

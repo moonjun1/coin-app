@@ -1,4 +1,4 @@
-package com.example.fragmentapp
+package com.example.fragmentapp.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,8 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
+import com.example.fragmentapp.R
+import com.example.fragmentapp.adapters.NewsAdapter
+import com.example.fragmentapp.api.RetrofitClient
 
-class FavoriteFragment : Fragment() {
+class NewsFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyView: TextView
@@ -22,57 +25,48 @@ class FavoriteFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_favorite, container, false)
+        return inflater.inflate(R.layout.fragment_news, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recyclerView = view.findViewById(R.id.recycler_view)
+        recyclerView = view.findViewById(R.id.news_recycler_view)
         emptyView = view.findViewById(R.id.empty_view)
-
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        loadFavorites()
+        loadNews()
     }
 
-    override fun onResume() {
-        super.onResume()
-        loadFavorites()
-    }
-
-    private fun loadFavorites() {
+    private fun loadNews() {
+        emptyView.visibility = View.VISIBLE
         lifecycleScope.launch {
             try {
-                val favoriteIds = FavoriteManager.getFavorites(requireContext())
+                val newsResponse = RetrofitClient.newsApi.getNews()
+                val newsList = newsResponse.articles
 
-                if (favoriteIds.isEmpty()) {
-                    recyclerView.visibility = View.GONE
-                    emptyView.visibility = View.VISIBLE
+                if (newsList.isEmpty()) {
+                    emptyView.text = "뉴스가 없습니다"
                 } else {
-                    val allCryptos = RetrofitClient.api.getCryptoList()
-                    val favoriteCryptos = allCryptos.filter { it.id in favoriteIds }
-
-                    recyclerView.visibility = View.VISIBLE
                     emptyView.visibility = View.GONE
-
-                    recyclerView.adapter = CryptoAdapter(favoriteCryptos) { cryptoId ->
-                        openDetailFragment(cryptoId)
+                    recyclerView.adapter = NewsAdapter(newsList) { newsUrl ->
+                        openNewsDetail(newsUrl)
                     }
                 }
 
             } catch (e: Exception) {
+                emptyView.text = "뉴스를 불러오는데 실패했습니다"
                 Toast.makeText(
                     context,
-                    "데이터를 불러오는데 실패했습니다: ${e.message}",
+                    "뉴스를 불러오는데 실패했습니다: ${e.message}",
                     Toast.LENGTH_SHORT
                 ).show()
             }
         }
     }
 
-    private fun openDetailFragment(cryptoId: String) {
-        val detailFragment = CryptoDetailFragment.newInstance(cryptoId)
+    private fun openNewsDetail(newsUrl: String) {
+        val detailFragment = NewsDetailFragment.newInstance(newsUrl)
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, detailFragment)
             .addToBackStack(null)

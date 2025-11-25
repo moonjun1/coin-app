@@ -1,4 +1,4 @@
-package com.example.fragmentapp
+package com.example.fragmentapp.models
 
 import com.google.gson.annotations.SerializedName
 
